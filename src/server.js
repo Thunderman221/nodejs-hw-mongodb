@@ -1,13 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
-import { env } from './utils/env.js';
+
 import { getContactById, getAllContacts } from './services/contacts.js';
 
 const setupServer = async () => {
   try {
     const app = express();
-    const PORT = Number(env('PORT', '3000'));
+    const PORT = process.env.PORT || 3000;
 
     app.use(cors());
     app.use(express.json());
