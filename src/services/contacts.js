@@ -1,5 +1,7 @@
 import Contact from '../db/models/contacts.js';
 
+import mongoose from 'mongoose';
+
 export const getAllContacts = async () => {
   try {
     const contacts = await Contact.find();
@@ -66,8 +68,11 @@ export const updateContact = async (contactId, updatedData, options = {}) => {
   };
 };
 export const deleteContact = async (contactId) => {
-  const contact = await Contact.findOneAndDelete({
-    id: contactId,
-  });
+  if (!mongoose.Types.ObjectId.isValid(contactId)) {
+    throw new Error('Invalid contact ID');
+  }
+
+  const contact = await Contact.findByIdAndDelete(contactId);
+
   return contact;
 };

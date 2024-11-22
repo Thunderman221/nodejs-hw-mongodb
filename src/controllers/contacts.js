@@ -6,6 +6,8 @@ import {
   updateContact,
   deleteContact,
 } from '../services/contacts.js';
+
+import mongoose from 'mongoose';
 import Joi from 'joi';
 
 const contactSchema = Joi.object({
@@ -80,9 +82,19 @@ export const updateContactController = async (req, res, next) => {
 export const deleteContactController = async (req, res, next) => {
   const { contactId } = req.params;
 
-  const contact = await deleteContact(contactId);
-  if (!contact) {
-    next(createHttpError(404, 'Contact not found'));
-    return;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(contactId)) {
+      throw createHttpError(400, 'Invalid contact ID');
+    }
+
+    const contact = await deleteContact(contactId);
+
+    if (!contact) {
+      throw createHttpError(404, 'Contact not found');
+    }
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
   }
 };
