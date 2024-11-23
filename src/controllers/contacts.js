@@ -66,17 +66,25 @@ export const updateContactController = async (req, res, next) => {
     throw createHttpError(400, 'No fields provided to update');
   }
 
-  const updatedContact = await updateContact(contactId, updatedData);
+  try {
+    if (!mongoose.Types.ObjectId.isValid(contactId)) {
+      throw createHttpError(400, 'Invalid contact ID');
+    }
 
-  if (!updatedContact) {
-    throw createHttpError(404, 'Contact not found');
+    const updatedContact = await updateContact(contactId, updatedData);
+
+    if (!updatedContact) {
+      throw createHttpError(404, 'Contact not found');
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully updated the contact!',
+      data: updatedContact,
+    });
+  } catch (error) {
+    next(error);
   }
-
-  res.status(200).json({
-    status: 200,
-    message: 'Successfully updated a contact!',
-    data: updatedContact,
-  });
 };
 
 export const deleteContactController = async (req, res, next) => {

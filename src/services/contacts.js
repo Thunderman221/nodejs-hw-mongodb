@@ -48,25 +48,24 @@ export const createContact = async ({
   }
 };
 
-export const updateContact = async (contactId, updatedData, options = {}) => {
-  const rawResult = await Contact.findOneAndUpdate(
-    { _id: contactId },
-    updatedData,
-    {
-      new: true,
-      runValidators: true,
-      includeResultMetadata: true,
-      ...options,
-    },
-  );
+export const updateContact = async (contactId, updatedData) => {
+  try {
+    const updatedContact = await Contact.findByIdAndUpdate(
+      contactId,
+      updatedData,
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
 
-  if (!rawResult || !rawResult.value) return null;
-
-  return {
-    contact: rawResult.value,
-    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
-  };
+    return updatedContact; // Повертаємо об'єкт контакту
+  } catch (error) {
+    console.error('Error updating contact:', error);
+    throw new Error('Error updating contact');
+  }
 };
+
 export const deleteContact = async (contactId) => {
   if (!mongoose.Types.ObjectId.isValid(contactId)) {
     throw new Error('Invalid contact ID');
