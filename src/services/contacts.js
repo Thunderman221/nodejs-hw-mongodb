@@ -59,7 +59,7 @@ export const updateContact = async (contactId, updatedData) => {
       },
     );
 
-    return updatedContact; // Повертаємо об'єкт контакту
+    return updatedContact;
   } catch (error) {
     console.error('Error updating contact:', error);
     throw new Error('Error updating contact');
