@@ -31,10 +31,10 @@ export const getAllContactsController = async (req, res) => {
 
   const filters = {};
   if (type) {
-    filters.type = type;
+    filters.contactType = type;
   }
   if (isFavourite !== undefined) {
-    filters.isFavourite = isFavourite;
+    filters.isFavourite = isFavourite === 'true';
   }
 
   const { contacts, totalItems } = await getAllContacts(
