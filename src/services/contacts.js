@@ -2,10 +2,34 @@ import Contact from '../db/models/contacts.js';
 
 import mongoose from 'mongoose';
 
-export const getAllContacts = async () => {
+export const getAllContacts = async (
+  page = 1,
+  perPage = 10,
+  sortBy = 'name',
+  sortOrder = 'asc',
+  filters = {},
+) => {
   try {
-    const contacts = await Contact.find();
-    return contacts;
+    const skip = page > 0 ? (page - 1) * perPage : 0;
+    const sortDirection = sortOrder === 'desc' ? 1 : -1;
+
+    const filterConditions = {};
+    if (filters.type) {
+      filterConditions.contactType = filters.type;
+    }
+    if (filters.isFavourite !== undefined) {
+      filterConditions.isFavourite = filters.isFavourite === 'true';
+    }
+
+    const [contacts, totalItems] = await Promise.all([
+      Contact.find()
+        .sort({ [sortBy]: sortDirection })
+        .skip(skip)
+        .limit(perPage),
+      Contact.countDocuments(),
+    ]);
+
+    return { contacts, totalItems };
   } catch (error) {
     console.error(error);
     throw new Error('Error retrieving contacts');

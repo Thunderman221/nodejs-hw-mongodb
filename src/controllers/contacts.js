@@ -19,11 +19,49 @@ const contactSchema = Joi.object({
 });
 
 export const getAllContactsController = async (req, res) => {
-  const contacts = await getAllContacts();
+  const page = parseInt(req.query.page, 10) || 1;
+  const perPage = parseInt(req.query.perPage, 10) || 10;
+  const sortBy = req.query.sortBy || 'name';
+  const sortOrder = req.query.sortOrder || 'asc';
+  const type = req.query.type;
+  const isFavourite = req.query.isFavourite;
+
+  if (page < 1 || perPage < 1) {
+    throw createHttpError(400, 'Page and perPage must be positive integers');
+  }
+
+  if (!['asc', 'desc'].includes(sortOrder)) {
+    throw createHttpError(400, 'Invalid sortOrder. Use "asc" or "desc"');
+  }
+
+  const filters = {};
+  if (type) {
+    filters.type = type;
+  }
+  if (isFavourite !== undefined) {
+    filters.isFavourite = isFavourite;
+  }
+
+  const { contacts, totalItems } = await getAllContacts(
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+  );
+  const totalPages = Math.ceil(totalItems / perPage);
+
   res.status(200).json({
     status: 200,
     message: 'Successfully found contacts!',
-    data: contacts,
+    data: {
+      data: contacts,
+      page,
+      perPage,
+      totalItems,
+      totalPages,
+      hasPreviousPage: page > 1,
+      hasNextPage: page < totalPages,
+    },
   });
 };
 

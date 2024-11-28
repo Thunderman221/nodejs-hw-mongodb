@@ -3,8 +3,7 @@ const errorHandler = (error, req, res, next) => {
 
   res.status(status).json({
     status,
-    message: status === 500 ? 'Something went wrong' : error.message,
-    data: error.message,
+    message: error.message || 'Something went wrong',
   });
 };
 
