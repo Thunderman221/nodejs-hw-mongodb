@@ -8,15 +8,10 @@ import {
 } from '../services/contacts.js';
 
 import mongoose from 'mongoose';
-import Joi from 'joi';
-
-const contactSchema = Joi.object({
-  name: Joi.string().required(),
-  phoneNumber: Joi.string().required(),
-  email: Joi.string().email().optional(),
-  isFavourite: Joi.boolean().optional(),
-  contactType: Joi.string().required(),
-});
+import {
+  createContactSchema,
+  updateContactSchema,
+} from '../validation/contacts.js';
 
 export const getAllContactsController = async (req, res) => {
   const page = parseInt(req.query.page, 10) || 1;
@@ -47,6 +42,7 @@ export const getAllContactsController = async (req, res) => {
     perPage,
     sortBy,
     sortOrder,
+    filters,
   );
   const totalPages = Math.ceil(totalItems / perPage);
 
@@ -65,6 +61,7 @@ export const getAllContactsController = async (req, res) => {
   });
 };
 
+// Контроллер для получения контакта по ID
 export const getContactByIdController = async (req, res) => {
   const { contactId } = req.params;
   const contact = await getContactById(contactId);
@@ -81,7 +78,7 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const createContactController = async (req, res) => {
-  const { error } = contactSchema.validate(req.body);
+  const { error } = createContactSchema.validate(req.body);
 
   if (error) {
     throw createHttpError(400, error.details[0].message);
@@ -99,6 +96,11 @@ export const createContactController = async (req, res) => {
 export const updateContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const updatedData = req.body;
+
+  const { error } = updateContactSchema.validate(updatedData);
+  if (error) {
+    throw createHttpError(400, error.details[0].message);
+  }
 
   if (Object.keys(updatedData).length === 0) {
     throw createHttpError(400, 'No fields provided to update');
