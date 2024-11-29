@@ -11,22 +11,22 @@ export const getAllContacts = async (
 ) => {
   try {
     const skip = page > 0 ? (page - 1) * perPage : 0;
-    const sortDirection = sortOrder === 'desc' ? 1 : -1;
+    const sortDirection = sortOrder === 'desc' ? -1 : 1;
 
     const filterConditions = {};
-    if (filters.type) {
-      filterConditions.contactType = filters.type;
+    if (filters.contactType) {
+      filterConditions.contactType = filters.contactType;
     }
     if (filters.isFavourite !== undefined) {
       filterConditions.isFavourite = filters.isFavourite === 'true';
     }
 
     const [contacts, totalItems] = await Promise.all([
-      Contact.find()
+      Contact.find(filterConditions)
         .sort({ [sortBy]: sortDirection })
         .skip(skip)
         .limit(perPage),
-      Contact.countDocuments(),
+      Contact.countDocuments(filterConditions),
     ]);
 
     return { contacts, totalItems };

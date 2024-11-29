@@ -13,55 +13,56 @@ import {
   updateContactSchema,
 } from '../validation/contacts.js';
 
-export const getAllContactsController = async (req, res) => {
-  const page = parseInt(req.query.page, 10) || 1;
-  const perPage = parseInt(req.query.perPage, 10) || 10;
-  const sortBy = req.query.sortBy || 'name';
-  const sortOrder = req.query.sortOrder || 'asc';
-  const type = req.query.type;
-  const isFavourite = req.query.isFavourite;
+export const getAllContactsController = async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page, 10) || 1;
+    const perPage = parseInt(req.query.perPage, 10) || 10;
+    const sortBy = req.query.sortBy || 'name';
+    const sortOrder = req.query.sortOrder || 'asc';
 
-  if (page < 1 || perPage < 1) {
-    throw createHttpError(400, 'Page and perPage must be positive integers');
-  }
+    if (page < 1 || perPage < 1) {
+      throw createHttpError(400, 'Page and perPage must be positive integers');
+    }
 
-  if (!['asc', 'desc'].includes(sortOrder)) {
-    throw createHttpError(400, 'Invalid sortOrder. Use "asc" or "desc"');
-  }
+    if (!['asc', 'desc'].includes(sortOrder)) {
+      throw createHttpError(400, 'Invalid sortOrder. Use "asc" or "desc"');
+    }
 
-  const filters = {};
-  if (type) {
-    filters.contactType = type;
-  }
-  if (isFavourite !== undefined) {
-    filters.isFavourite = isFavourite === 'true';
-  }
+    const filters = {};
+    if (req.query.type) {
+      filters.contactType = req.query.type;
+    }
+    if (req.query.isFavourite !== undefined) {
+      filters.isFavourite = req.query.isFavourite === 'true';
+    }
 
-  const { contacts, totalItems } = await getAllContacts(
-    page,
-    perPage,
-    sortBy,
-    sortOrder,
-    filters,
-  );
-  const totalPages = Math.ceil(totalItems / perPage);
-
-  res.status(200).json({
-    status: 200,
-    message: 'Successfully found contacts!',
-    data: {
-      data: contacts,
+    const { contacts, totalItems } = await getAllContacts(
       page,
       perPage,
-      totalItems,
-      totalPages,
-      hasPreviousPage: page > 1,
-      hasNextPage: page < totalPages,
-    },
-  });
+      sortBy,
+      sortOrder,
+      filters,
+    );
+    const totalPages = Math.ceil(totalItems / perPage);
+
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully found contacts!',
+      data: {
+        data: contacts,
+        page,
+        perPage,
+        totalItems,
+        totalPages,
+        hasPreviousPage: page > 1,
+        hasNextPage: page < totalPages,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-// Контроллер для получения контакта по ID
 export const getContactByIdController = async (req, res) => {
   const { contactId } = req.params;
   const contact = await getContactById(contactId);
