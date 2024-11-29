@@ -15,10 +15,14 @@ import {
 
 export const getAllContactsController = async (req, res, next) => {
   try {
-    const page = parseInt(req.query.page, 10) || 1;
-    const perPage = parseInt(req.query.perPage, 10) || 10;
-    const sortBy = req.query.sortBy || 'name';
-    const sortOrder = req.query.sortOrder || 'asc';
+    const {
+      page = 1,
+      perPage = 10,
+      sortBy = 'name',
+      sortOrder = 'asc',
+      type,
+      isFavourite,
+    } = req.query;
 
     if (page < 1 || perPage < 1) {
       throw createHttpError(400, 'Page and perPage must be positive integers');
@@ -28,21 +32,16 @@ export const getAllContactsController = async (req, res, next) => {
       throw createHttpError(400, 'Invalid sortOrder. Use "asc" or "desc"');
     }
 
-    const filters = {};
-    if (req.query.type) {
-      filters.contactType = req.query.type;
-    }
-    if (req.query.isFavourite !== undefined) {
-      filters.isFavourite = req.query.isFavourite === 'true';
-    }
+    const filters = { type, isFavourite };
 
     const { contacts, totalItems } = await getAllContacts(
-      page,
-      perPage,
+      parseInt(page, 10),
+      parseInt(perPage, 10),
       sortBy,
       sortOrder,
       filters,
     );
+
     const totalPages = Math.ceil(totalItems / perPage);
 
     res.status(200).json({
@@ -50,8 +49,8 @@ export const getAllContactsController = async (req, res, next) => {
       message: 'Successfully found contacts!',
       data: {
         data: contacts,
-        page,
-        perPage,
+        page: parseInt(page, 10),
+        perPage: parseInt(perPage, 10),
         totalItems,
         totalPages,
         hasPreviousPage: page > 1,

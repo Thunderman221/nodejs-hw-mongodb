@@ -1,4 +1,5 @@
 import Contact from '../db/models/contacts.js';
+import { buildFilters } from '../utils/buildFilters.js';
 
 import mongoose from 'mongoose';
 
@@ -13,13 +14,7 @@ export const getAllContacts = async (
     const skip = page > 0 ? (page - 1) * perPage : 0;
     const sortDirection = sortOrder === 'desc' ? -1 : 1;
 
-    const filterConditions = {};
-    if (filters.contactType) {
-      filterConditions.contactType = filters.contactType;
-    }
-    if (filters.isFavourite !== undefined) {
-      filterConditions.isFavourite = filters.isFavourite === 'true';
-    }
+    const filterConditions = buildFilters(filters);
 
     const [contacts, totalItems] = await Promise.all([
       Contact.find(filterConditions)
