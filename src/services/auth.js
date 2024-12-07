@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
-import User from '../models/user.js';
+import User from '../db/models/user.js';
 import Session from '../db/models/session.js';
 
 export const createUser = async ({ name, email, password }) => {
