@@ -32,6 +32,11 @@ const contactSchema = new mongoose.Schema(
       required: [true, 'Contact type is required'],
       default: 'personal',
     },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
   },
   {
     timestamps: true,
