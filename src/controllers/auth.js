@@ -65,7 +65,7 @@ export const refreshController = async (req, res, next) => {
     }
 
     const { accessToken, refreshToken: newRefreshToken } = await refreshSession(
-      refreshController,
+      refreshToken,
     );
 
     res
