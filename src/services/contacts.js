@@ -1,7 +1,7 @@
 import Contact from '../db/models/contacts.js';
 import { buildFilters } from '../utils/buildFilters.js';
 
-import mongoose from 'mongoose';
+// import mongoose from 'mongoose';
 
 export const getAllContacts = async (
   page = 1,
@@ -42,7 +42,7 @@ export const getContactById = async (contactId, userId) => {
     }
     return contact;
   } catch (error) {
-    console.error(error);
+    console.error('Error retrieving contact by ID:', error);
     throw new Error('Error retrieving contact by ID');
   }
 };
@@ -96,15 +96,16 @@ export const updateContact = async (contactId, updatedData, userId) => {
 };
 
 export const deleteContact = async (contactId, userId) => {
-  if (!mongoose.Types.ObjectId.isValid(contactId)) {
-    throw new Error('Invalid contact ID');
+  try {
+    const contact = await Contact.findOneAndDelete({ _id: contactId, userId });
+
+    if (!contact) {
+      throw new Error('Contact not found or not owned by user');
+    }
+
+    return contact;
+  } catch (error) {
+    console.error('Error deleting contact:', error);
+    throw new Error('Error deleting contact');
   }
-
-  const contact = await Contact.findOneAndDelete({ _id: contactId, userId });
-
-  if (!contact) {
-    throw new Error('Contact not found or not owned by user');
-  }
-
-  return contact;
 };
