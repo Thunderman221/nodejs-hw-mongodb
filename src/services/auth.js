@@ -37,7 +37,7 @@ export const loginUser = async ({ email, password }) => {
     throw createHttpError(401, 'Email or password is incorrect');
   }
 
-  await Session.findOneAndDelete({ userId: user._id, accessToken });
+  await Session.deleteMany({ userId: user._id });
 
   const accessToken = crypto.randomBytes(30).toString('base64');
   const refreshToken = crypto.randomBytes(30).toString('base64');
