@@ -10,7 +10,7 @@ import {
 
 import { APP_DOMAIN, SMTP } from '../constants/index.js';
 // import jwt from 'jsonwebtoken';
-import { sendMail } from '../utils/sendMail.js';
+import sendMail from '../utils/sendMail.js';
 
 export const registerUserController = async (req, res, next) => {
   try {
