@@ -1,5 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary';
-import { CLOUD_NAME, API_KEY, API_SECRET } from '../constants/index.js';
+import { CLOUDINARY } from '../constants/index.js';
+
+const { CLOUD_NAME, API_KEY, API_SECRET } = CLOUDINARY;
 
 cloudinary.config({
   cloud_name: CLOUD_NAME,
