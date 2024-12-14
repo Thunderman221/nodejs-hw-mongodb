@@ -19,6 +19,8 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "brevo": "^1.0.0",
+    "cloudinary": "^2.5.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -28,6 +30,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.10.0",
     "mongoose": "^8.8.1",
+    "nodemailer": "^6.9.16",
     "pino": "^9.5.0",
     "pino-http": "^10.3.0",
     "pino-pretty": "^13.0.0"

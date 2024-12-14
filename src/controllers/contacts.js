@@ -7,7 +7,8 @@ import {
   deleteContact,
 } from '../services/contacts.js';
 
-import mongoose from 'mongoose';
+import { uploadImage } from '../services/cloudinary.js';
+
 import {
   createContactSchema,
   updateContactSchema,
@@ -70,41 +71,50 @@ export const getContactByIdController = async (req, res, next) => {
   }
 };
 
-export const createContactController = async (req, res) => {
-  const { error } = createContactSchema.validate(req.body);
-
-  if (error) {
-    throw createHttpError(400, error.details[0].message);
-  }
-
-  const newContact = await createContact({
-    ...req.body,
-    userId: req.user._id,
-  });
-
-  res.status(201).json({
-    status: 201,
-    message: 'Successfully created a contact!',
-    data: newContact,
-  });
-};
-
-export const updateContactController = async (req, res, next) => {
-  const { contactId } = req.params;
-  const updatedData = req.body;
-
-  const { error } = updateContactSchema.validate(updatedData);
-  if (error) {
-    throw createHttpError(400, error.details[0].message);
-  }
-
-  if (Object.keys(updatedData).length === 0) {
-    throw createHttpError(400, 'No fields provided to update');
-  }
-
+export const createContactController = async (req, res, next) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(contactId)) {
-      throw createHttpError(400, 'Invalid contact ID');
+    const { error } = createContactSchema.validate(req.body);
+    if (error) {
+      throw createHttpError(400, error.details[0].message);
+    }
+
+    let photoUrl = null;
+    if (req.file) {
+      photoUrl = await uploadImage(req.file.path);
+    }
+
+    const newContact = await createContact({
+      ...req.body,
+      photo: photoUrl,
+      userId: req.user._id,
+    });
+
+    res.status(201).json({
+      status: 201,
+      message: 'Successfully created a contact!',
+      data: newContact,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export const updateContactController = async (req, res, next) => {
+  try {
+    const { contactId } = req.params;
+
+    const { error } = updateContactSchema.validate(req.body);
+    if (error) {
+      throw createHttpError(400, error.details[0].message);
+    }
+
+    let photoUrl = undefined;
+    if (req.file) {
+      photoUrl = await uploadImage(req.file.path);
+    }
+
+    const updatedData = { ...req.body };
+    if (photoUrl) {
+      updatedData.photo = photoUrl;
     }
 
     const updatedContact = await updateContact(

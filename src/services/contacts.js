@@ -54,6 +54,7 @@ export const createContact = async ({
   isFavourite,
   contactType,
   userId,
+  photo,
 }) => {
   try {
     const newContact = new Contact({
@@ -63,6 +64,7 @@ export const createContact = async ({
       isFavourite,
       contactType,
       userId,
+      photo,
     });
 
     await newContact.save();

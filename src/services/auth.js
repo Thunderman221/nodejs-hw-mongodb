@@ -5,6 +5,9 @@ import createHttpError from 'http-errors';
 import User from '../db/models/user.js';
 import Session from '../db/models/session.js';
 
+import jwt from 'jsonwebtoken';
+import { JWT_SECRET } from '../constants/index.js';
+
 export const createUser = async ({ name, email, password }) => {
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -95,4 +98,42 @@ export const logoutUser = async (refreshToken) => {
   }
 
   await Session.deleteOne({ _id: session._id });
+};
+
+export const requestResetToken = async (email) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw createHttpError(404, 'User not found!');
+  }
+
+  const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '5m' });
+
+  return token;
+};
+
+export const resetPassword = async ({ token, password }) => {
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const { email } = decoded;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw createHttpError(404, 'User not found!');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    await Session.deleteMany({ userId: user._id });
+  } catch (error) {
+    if (
+      error.name === 'TokenExpiredError' ||
+      error.name === 'JsonWebTokenError'
+    ) {
+      throw createHttpError(401, 'Token is expired or valid.');
+    }
+    throw error;
+  }
 };

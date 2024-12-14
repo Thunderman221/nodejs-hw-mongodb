@@ -4,7 +4,13 @@ import {
   loginUser,
   logoutUser,
   refreshSession,
+  requestResetToken,
+  resetPassword,
 } from '../services/auth.js';
+
+import { APP_DOMAIN, SMTP } from '../constants/index.js';
+// import jwt from 'jsonwebtoken';
+import { sendMail } from '../utils/sendMail.js';
 
 export const registerUserController = async (req, res, next) => {
   try {
@@ -99,6 +105,56 @@ export const logoutController = async (req, res, next) => {
     });
 
     res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const sendResetEmailController = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    const token = await requestResetToken(email);
+
+    const resetLink = `${APP_DOMAIN}/reset-password?token=${token}`;
+
+    const mailOptions = {
+      from: SMTP.SMTP_FROM,
+      to: email,
+      subject: 'Password Reset Request',
+      text: `You requested a password reset. Use the following link to reset your password: ${resetLink}`,
+      html: `<p>You requested a password reset.</p>
+             <p>Use the following link to reset your password:</p>
+             <a href="${resetLink}">${resetLink}</a>`,
+    };
+
+    await sendMail(mailOptions);
+
+    res.status(200).json({
+      status: 200,
+      message: 'Reset password email has been successfully sent.',
+      data: {},
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const resetPasswordController = async (req, res, next) => {
+  try {
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+      throw createHttpError(400, 'Missing required fielsd');
+    }
+
+    await resetPassword({ token, password });
+
+    res.status(200).json({
+      status: 200,
+      message: 'Password has been successfully reset!',
+      data: {},
+    });
   } catch (error) {
     next(error);
   }
