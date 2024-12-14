@@ -7,9 +7,9 @@ export const SMTP = {
 };
 
 export const CLOUDINARY = {
-  CLOUD_NAME: 'CLOUD_NAME',
-  API_KEY: 'API_KEY',
-  API_SECRET: 'API_SECRET',
+  CLOUD_NAME: process.env.CLOUD_NAME,
+  API_KEY: process.env.API_KEY,
+  API_SECRET: process.env.API_SECRET,
 };
 
 export const APP_DOMAIN = process.env.APP_DOMAIN;
