@@ -1,3 +1,6 @@
+export const APP_DOMAIN = process.env.APP_DOMAIN;
+export const JWT_SECRET = process.env.JWT_SECRET || 'secret_token';
+
 export const SMTP = {
   SMTP_HOST: process.env.SMTP_HOST,
   SMTP_PORT: process.env.SMTP_PORT,
@@ -11,7 +14,3 @@ export const CLOUDINARY = {
   API_KEY: process.env.API_KEY,
   API_SECRET: process.env.API_SECRET,
 };
-
-export const APP_DOMAIN = process.env.APP_DOMAIN;
-export const JWT_SECRET =
-  process.env.JWT_SECRET || '8r6JXHWDDm83KaO1IoQla369ahhMWC';
