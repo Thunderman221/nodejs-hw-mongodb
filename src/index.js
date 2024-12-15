@@ -3,7 +3,6 @@ dotenv.config();
 
 import { setupServer } from './server.js';
 import { initMongoConnection } from './db/initMongoConnection.js';
-// import { JWT_SECRET } from './constants/index.js';
 
 const bootstrap = async () => {
   try {
