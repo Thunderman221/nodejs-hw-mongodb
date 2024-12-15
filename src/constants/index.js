@@ -1,6 +1,3 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
 export const SMTP = {
   SMTP_HOST: process.env.SMTP_HOST,
   SMTP_PORT: process.env.SMTP_PORT,
@@ -16,4 +13,4 @@ export const CLOUDINARY = {
 };
 
 export const APP_DOMAIN = process.env.APP_DOMAIN;
-export const JWT_SECRET = process.env.JWT_SECRET;
+export const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret';
