@@ -13,4 +13,5 @@ export const CLOUDINARY = {
 };
 
 export const APP_DOMAIN = process.env.APP_DOMAIN;
-export const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret';
+export const JWT_SECRET =
+  process.env.JWT_SECRET || '8r6JXHWDDm83KaO1IoQla369ahhMWC';
