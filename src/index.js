@@ -3,15 +3,15 @@ dotenv.config();
 
 import { setupServer } from './server.js';
 import { initMongoConnection } from './db/initMongoConnection.js';
+import { JWT_SECRET } from './constants/index.js';
+
+console.log('JWT_SECRET:', JWT_SECRET);
 
 const bootstrap = async () => {
   try {
     console.log('Starting the application...');
-
     await initMongoConnection();
-
     await setupServer();
-
     console.log('Application initialized successfully!');
   } catch (error) {
     console.error('Failed to initialize the application', error);

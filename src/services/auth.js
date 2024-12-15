@@ -6,7 +6,7 @@ import User from '../db/models/user.js';
 import Session from '../db/models/session.js';
 
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '../constants/index.js';
+// import { JWT_SECRET } from '../constants/index.js';
 
 export const createUser = async ({ name, email, password }) => {
   const existingUser = await User.findOne({ email });
@@ -106,14 +106,16 @@ export const requestResetToken = async (email) => {
     throw createHttpError(404, 'User not found!');
   }
 
-  const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '5m' });
+  const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+    expiresIn: '5m',
+  });
 
   return token;
 };
 
 export const resetPassword = async ({ token, password }) => {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const { email } = decoded;
 
     const user = await User.findOne({ email });
