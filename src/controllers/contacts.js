@@ -70,7 +70,6 @@ export const getContactByIdController = async (req, res, next) => {
     next(error);
   }
 };
-
 export const createContactController = async (req, res, next) => {
   try {
     const { error } = createContactSchema.validate(req.body);
@@ -80,7 +79,11 @@ export const createContactController = async (req, res, next) => {
 
     let photoUrl = null;
     if (req.file) {
-      photoUrl = await uploadImage(req.file.path);
+      const base64Image = `data:${
+        req.file.mimetype
+      };base64,${req.file.buffer.toString('base64')}`;
+      const uploadResult = await uploadImage(base64Image);
+      photoUrl = uploadResult;
     }
 
     const newContact = await createContact({
@@ -98,6 +101,7 @@ export const createContactController = async (req, res, next) => {
     next(error);
   }
 };
+
 export const updateContactController = async (req, res, next) => {
   try {
     const { contactId } = req.params;
@@ -109,7 +113,11 @@ export const updateContactController = async (req, res, next) => {
 
     let photoUrl = undefined;
     if (req.file) {
-      photoUrl = await uploadImage(req.file.path);
+      const base64Image = `data:${
+        req.file.mimetype
+      };base64,${req.file.buffer.toString('base64')}`;
+      const uploadResult = await uploadImage(base64Image);
+      photoUrl = uploadResult;
     }
 
     const updatedData = { ...req.body };
