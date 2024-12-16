@@ -25,16 +25,16 @@ router.get('/', ctrlWrapper(getAllContactsController));
 router.get('/:contactId', isValidId, ctrlWrapper(getContactByIdController));
 router.post(
   '/',
-  jsonParser,
   upload.single('photo'),
+  jsonParser,
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
 router.patch(
   '/:contactId',
   isValidId,
-  jsonParser,
   upload.single('photo'),
+  jsonParser,
   validateBody(updateContactSchema),
   ctrlWrapper(updateContactController),
 );
