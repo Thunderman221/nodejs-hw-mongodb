@@ -1,0 +1,41 @@
+tags:
+  - Contacts
+summary: Retrieve all contacts
+operationId: getAllContacts
+description: Retrieve a list of all contacts for the authenticated user. Supports optional filtering and pagination.
+security:
+  - BearerAuth: []
+parameters:
+  - name: limit
+    in: query
+    required: false
+    description: Number of contacts per page.
+    schema:
+      type: integer
+      example: 10
+  - name: offset
+    in: query
+    required: false
+    description: Number of contacts to skip for pagination.
+    schema:
+      type: integer
+      example: 0
+  - name: isFavourite
+    in: query
+    required: false
+    description: Filter contacts by favourite status.
+    schema:
+      type: boolean
+responses:
+  '200':
+    description: Successfully retrieved the list of contacts.
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: '../../components/schemas/contact.yaml'
+  '401':
+    description: Unauthorized request, Bearer token is required.
+  '500':
+    description: Internal server error.

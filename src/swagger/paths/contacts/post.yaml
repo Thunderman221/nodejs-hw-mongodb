@@ -1,0 +1,43 @@
+tags:
+  - Contacts
+summary: Create a new contact
+operationId: createContact
+description: Create a new contact for the authenticated user.
+security:
+  - BearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+            example: Josh Crowly
+          phoneNumber:
+            type: string
+            example: '+381234567890'
+          email:
+            type: string
+            example: example@mail.com
+          isFavourite:
+            type: boolean
+            example: false
+          contactType:
+            type: string
+            enum: [work, home, personal]
+            example: work
+responses:
+  '201':
+    description: Contact created successfully.
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/contact.yaml
+  '400':
+    description: Bad request (invalid data).
+  '401':
+    description: Unauthorized request, Bearer token is required.
+  '500':
+    description: Internal server error.

@@ -1,0 +1,5 @@
+description: Contact retrieved successfully
+content:
+  aplication/json:
+    schema:
+      $ref: '../schemas/contact.yaml'

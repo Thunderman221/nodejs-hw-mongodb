@@ -1,0 +1,24 @@
+tags:
+  - Contacts
+summary: Delete a contact
+operationId: deleteContact
+description: Remove a specific contact by its unique ID.
+security:
+  - BearerAuth: []
+parameters:
+  - name: contactId
+    in: path
+    required: true
+    description: The unique identifier of the contact to delete.
+    schema:
+      type: string
+      format: uuid
+responses:
+  '204':
+    description: Contact deleted successfully.
+  '404':
+    description: Contact not found.
+  '401':
+    description: Unauthorized request, Bearer token is required.
+  '500':
+    description: Internal server error.

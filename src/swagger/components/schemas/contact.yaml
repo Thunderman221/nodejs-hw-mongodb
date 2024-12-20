@@ -1,0 +1,51 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+    example: '63f1bff8a9e4621d2e4e9134'
+  name:
+    type: string
+    description: 'The name of the contact'
+    example: 'Josh Crowly'
+  phoneNumber:
+    type: string
+    description: 'The phone number of the contact'
+    example: '+381234567890'
+  email:
+    type: string
+    description: 'The email address of the contact'
+    example: 'example@mail.com'
+  isFavourite:
+    type: boolean
+    description: 'Marks if the contact is favourite'
+    example: true
+  contactType:
+    type: string
+    enum: [work, home, personal]
+    description: 'Type of the contact'
+    example: 'work'
+  userId:
+    type: string
+    format: uuid
+    description: 'The ID of the user who owns the contact'
+    example: '63f1bff8a9e4621d2e4e9134'
+  photo:
+    type: string
+    description: 'URL to the contact’s photo'
+    example: 'https://example.com/photo.png'
+  createdAt:
+    type: string
+    format: date-time
+    description: 'When the contact was created'
+    example: '2023-12-19T18:42:00Z'
+  updatedAt:
+    type: string
+    format: date-time
+    description: 'When the contact was last updated'
+    example: '2023-12-19T18:43:00Z'
+required:
+  - name
+  - phoneNumber
+  - contactType
+  - userId

@@ -1,0 +1,36 @@
+tags:
+  - Contacts
+summary: Get contact by ID
+operationId: getContactById
+description: Retrieve detailed information about a contact using its unique identifier.
+security:
+  - BearerAuth: []
+parameters:
+  - name: contactId
+    in: path
+    required: true
+    description: The unique identifier of the contact to retrieve.
+    schema:
+      type: string
+      format: uuid
+responses:
+  '200':
+    description: Successfully retrieved the contact details.
+    content:
+      application/json:
+        schema:
+          $ref: '../../../components/schemas/contact.yaml'
+  '404':
+    description: Contact not found.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Contact not found.
+  '401':
+    description: Unauthorized request, Bearer token is required.
+  '500':
+    description: Internal server error.

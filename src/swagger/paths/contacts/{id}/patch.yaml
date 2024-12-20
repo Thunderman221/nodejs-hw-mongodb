@@ -1,0 +1,53 @@
+tags:
+  - Contacts
+summary: Update a contact
+operationId: updateContact
+description: Update the details of a specific contact by its unique ID.
+security:
+  - BearerAuth: []
+parameters:
+  - name: contactId
+    in: path
+    required: true
+    description: The unique identifier of the contact to update.
+    schema:
+      type: string
+      format: uuid
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+            example: Josh Crowly
+          phoneNumber:
+            type: string
+            example: '+381234567890'
+          email:
+            type: string
+            example: example@mail.com
+          isFavourite:
+            type: boolean
+            example: true
+          contactType:
+            type: string
+            enum: [work, home, personal]
+            example: work
+responses:
+  '200':
+    description: Contact updated successfully.
+    content:
+      application/json:
+        schema:
+          $ref: '../../../components/schemas/contact.yaml'
+  '400':
+    description: Bad request (invalid data).
+  '404':
+    description: Contact not found.
+  '401':
+    description: Unauthorized request, Bearer token is required.
+  '500':
+    description: Internal server error.
