@@ -14,9 +14,6 @@ tags:
 servers:
   - url: http://127.0.0.1:3000
 paths:
-  /auth/register:
-    post:
-      $ref: '../swagger/paths/auth/register/post.yaml'
   /contacts:
     get:
       $ref: '../swagger/paths/contacts/get.yaml'

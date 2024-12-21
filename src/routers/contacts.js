@@ -1,6 +1,5 @@
 import express from 'express';
-import swaggerUi from 'swagger-ui-express';
-import YAML from 'yamljs';
+
 import {
   getAllContactsController,
   getContactByIdController,
@@ -20,10 +19,6 @@ import upload from '../middlewares/upload.js';
 
 const router = express.Router();
 const jsonParser = express.json();
-
-const swaggerDocument = YAML.load('./src/docs/openapi.yaml');
-
-router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 router.use(authenticate);
 
