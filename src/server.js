@@ -17,6 +17,8 @@ const setupServer = async () => {
     const app = express();
     const PORT = process.env.PORT || 3000;
 
+    const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
     const swaggerDocument = YAML.load(
       path.join(__dirname, 'src/docs/openapi.yaml'),
     );
