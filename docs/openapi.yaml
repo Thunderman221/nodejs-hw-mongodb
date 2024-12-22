@@ -34,4 +34,4 @@ components:
       scheme: bearer
   schemas:
     Contact:
-      $ref: ../src/swagger/components/schemas/contact.yaml
+      $ref: '../src/swagger/components/schemas/contact.yaml'
