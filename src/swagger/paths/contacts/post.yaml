@@ -37,6 +37,7 @@ responses:
           $ref: ../../components/schemas/contact.yaml
   '400':
     description: Bad request (invalid data).
+
   '401':
     description: Unauthorized request, Bearer token is required.
   '500':
