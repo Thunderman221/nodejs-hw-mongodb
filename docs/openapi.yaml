@@ -12,8 +12,8 @@ tags:
   - name: Contacts
     description: Endpoints for managing contacts.
 servers:
-  - url: http://127.0.0.1:3000
   - url: https://nodejs-hw-mongodb-02nl.onrender.com
+  - url: http://127.0.0.1:3000
 paths:
   /contacts:
     get:
