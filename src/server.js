@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
+import path from 'path';
 
 import contactsRouter from './routers/contacts.js';
 import authRouter from './routers/auth.js';
@@ -16,7 +17,9 @@ const setupServer = async () => {
     const app = express();
     const PORT = process.env.PORT || 3000;
 
-    const swaggerDocument = YAML.load('./src/docs/openapi.yaml');
+    const swaggerDocument = YAML.load(
+      path.join(__dirname, 'src/docs/openapi.yaml'),
+    );
 
     app.use(cors());
     app.use(express.json());
@@ -30,7 +33,11 @@ const setupServer = async () => {
       }),
     );
 
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    app.use(
+      '/api-docs',
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerDocument, { explorer: true }),
+    );
 
     app.use('/contacts', contactsRouter);
     app.use('/auth', authRouter);
