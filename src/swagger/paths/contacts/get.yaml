@@ -34,7 +34,7 @@ responses:
         schema:
           type: array
           items:
-            $ref: '../../components/schemas/contact.yaml'
+            $ref: ../../components/schemas/contact.yaml
   '401':
     description: Unauthorized request, Bearer token is required.
   '500':
