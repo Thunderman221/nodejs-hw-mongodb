@@ -1,18 +1,18 @@
 openapi: 3.1.0
 info:
   version: 1.0.0
-  title: <назва вашого додатку>
+  title: Contact Book
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  description: <опис вашого додатку>
+  description: >
+    Simple contact book app with opportunity to create personal contacts.
+    It has registration to customize contacts for different users.
 tags:
   - name: Contacts
     description: Endpoints for managing contacts.
-  - name: Authentication
-    description: Endpoint for managing auth
 servers:
-  - url: http://127.0.0.1:3000
+  - url: https://nodejs-hw-mongodb-02nl.onrender.com
 paths:
   /contacts:
     get:
@@ -31,3 +31,6 @@ components:
     BearerAuth:
       type: http
       scheme: bearer
+  schemas:
+    Contact:
+      $ref: ../swagger/components/schemas/contact.yaml
