@@ -5,7 +5,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  description: >
+  description: |
     Simple contact book app with opportunity to create personal contacts.
     It has registration to customize contacts for different users.
 tags:

@@ -7,7 +7,7 @@
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "description": "Simple contact book app with opportunity to create personal contacts. It has registration to customize contacts for different users.\n"
+    "description": "Simple contact book app with opportunity to create personal contacts.\nIt has registration to customize contacts for different users.\n"
   },
   "servers": [
     {
