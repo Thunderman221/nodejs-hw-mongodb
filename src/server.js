@@ -35,11 +35,7 @@ const setupServer = async () => {
       }),
     );
 
-    app.use(
-      '/api-docs',
-      swaggerUi.serve,
-      swaggerUi.setup(swaggerDocument, { explorer: true }),
-    );
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
     app.use('/contacts', contactsRouter);
     app.use('/auth', authRouter);
