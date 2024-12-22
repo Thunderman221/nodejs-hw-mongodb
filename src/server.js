@@ -20,7 +20,7 @@ const setupServer = async () => {
     const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
     const swaggerDocument = YAML.load(
-      path.join(__dirname, 'src/docs/openapi.yaml'),
+      path.join(__dirname, 'docs/openapi.yaml'),
     );
 
     app.use(cors());
