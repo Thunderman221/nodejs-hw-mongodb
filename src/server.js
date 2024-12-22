@@ -34,8 +34,14 @@ const setupServer = async () => {
         },
       }),
     );
-
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    app.use(
+      '/api-docs',
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerDocument, {
+        explorer: true,
+        tagsSorter: 'alpha',
+      }),
+    );
 
     app.use('/contacts', contactsRouter);
     app.use('/auth', authRouter);
