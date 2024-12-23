@@ -17,10 +17,12 @@ const setupServer = async () => {
     const app = express();
     const PORT = process.env.PORT || 3000;
 
-    const __dirname = path.dirname(new URL(import.meta.url).pathname);
+    const __dirname = path
+      .dirname(new URL(import.meta.url).pathname)
+      .replace(/^\/([A-Za-z]:)/, '$1');
 
     const swaggerDocument = YAML.load(
-      path.join(__dirname, '../docs/openapi.yaml'),
+      path.resolve(__dirname, '..', 'docs', 'openapi.yaml'),
     );
 
     app.use(cors());
