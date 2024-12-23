@@ -6,8 +6,8 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   description: |
-    Simple contact book app with opportunity to create personal contacts.
-    It has registration to customize contacts for different users.
+    Simple contact book app with opportunities to create personal contacts.
+    It includes registration to customize contacts for different users.
 tags:
   - name: Contacts
     description: Endpoints for managing contacts.
@@ -17,16 +17,96 @@ servers:
 paths:
   /contacts:
     get:
-      $ref: '../src/swagger/paths/contacts/get.yaml'
+      summary: Get all contacts
+      tags:
+        - Contacts
+      responses:
+        '200':
+          description: A list of contacts.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Contact'
+      security:
+        - BearerAuth: []
     post:
-      $ref: '../src/swagger/paths/contacts/post.yaml'
+      summary: Add a new contact
+      tags:
+        - Contacts
+      requestBody:
+        description: Contact data to add.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '201':
+          description: Contact created successfully.
+      security:
+        - BearerAuth: []
   /contacts/{contactId}:
     get:
-      $ref: '../src/swagger/paths/contacts/{id}/get.yaml'
+      summary: Get a contact by ID
+      tags:
+        - Contacts
+      parameters:
+        - name: contactId
+          in: path
+          required: true
+          description: ID of the contact to retrieve.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Contact details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+      security:
+        - BearerAuth: []
     patch:
-      $ref: '../src/swagger/paths/contacts/{id}/patch.yaml'
+      summary: Update a contact by ID
+      tags:
+        - Contacts
+      parameters:
+        - name: contactId
+          in: path
+          required: true
+          description: ID of the contact to update.
+          schema:
+            type: string
+      requestBody:
+        description: Fields to update in the contact.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '200':
+          description: Contact updated successfully.
+      security:
+        - BearerAuth: []
     delete:
-      $ref: '../src/swagger/paths/contacts/{id}/delete.yaml'
+      summary: Delete a contact by ID
+      tags:
+        - Contacts
+      parameters:
+        - name: contactId
+          in: path
+          required: true
+          description: ID of the contact to delete.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Contact deleted successfully.
+      security:
+        - BearerAuth: []
 components:
   securitySchemes:
     BearerAuth:
@@ -34,4 +114,21 @@ components:
       scheme: bearer
   schemas:
     Contact:
-      $ref: '../src/swagger/components/schemas/contact.yaml'
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the contact.
+        name:
+          type: string
+          description: Name of the contact.
+        email:
+          type: string
+          description: Email address of the contact.
+        phone:
+          type: string
+          description: Phone number of the contact.
+      required:
+        - name
+        - email
+        - phone
