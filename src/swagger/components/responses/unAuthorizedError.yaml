@@ -1,0 +1,12 @@
+components:
+  responses:
+    unAuthorizedError:
+      description: Unauthorized. The user is not authenticated.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Unauthorized

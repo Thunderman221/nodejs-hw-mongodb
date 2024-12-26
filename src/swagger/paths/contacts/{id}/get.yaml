@@ -31,6 +31,8 @@ responses:
               type: string
               example: Contact not found.
   '401':
-    description: Unauthorized request, Bearer token is required.
+    $ref: '../../../components/responses/unAuthorizedError.yaml'
+  "404":
+    $ref: "../../../components/responses/notFoundError.yaml"
   '500':
     description: Internal server error.

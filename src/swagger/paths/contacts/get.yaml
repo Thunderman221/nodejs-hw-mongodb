@@ -36,6 +36,7 @@ responses:
           items:
             $ref: '../../components/schemas/contact.yaml'
   '401':
-    description: Unauthorized request, Bearer token is required.
+    $ref: '../../components/responses/unAuthorizedError.yaml'
+
   '500':
     description: Internal server error.

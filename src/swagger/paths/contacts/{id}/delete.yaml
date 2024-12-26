@@ -17,8 +17,9 @@ responses:
   '204':
     description: Contact deleted successfully.
   '404':
-    description: Contact not found.
+    $ref: '../../../components/responses/notFoundError.yaml'
   '401':
-    description: Unauthorized request, Bearer token is required.
+    $ref: '../../../components/responses/unAuthorizedError.yaml'
+
   '500':
     description: Internal server error.

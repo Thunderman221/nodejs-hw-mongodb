@@ -7,14 +7,14 @@
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "description": "Simple contact book app with opportunity to create personal contacts.\nIt has registration to customize contacts for different users.\n"
+    "description": "Simple contact book app with opportunities to create personal contacts.\nIt includes registration to customize contacts for different users.\n"
   },
   "servers": [
     {
-      "url": "http://127.0.0.1:3000"
+      "url": "https://nodejs-hw-mongodb-02nl.onrender.com"
     },
     {
-      "url": "https://nodejs-hw-mongodb-02nl.onrender.com"
+      "url": "http://127.0.0.1:3000"
     }
   ],
   "tags": [
@@ -26,309 +26,163 @@
   "paths": {
     "/contacts": {
       "get": {
+        "summary": "Get all contacts",
         "tags": [
           "Contacts"
         ],
-        "summary": "Retrieve all contacts",
-        "operationId": "getAllContacts",
-        "description": "Retrieve a list of all contacts for the authenticated user. Supports optional filtering and pagination.",
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "description": "Number of contacts per page.",
-            "schema": {
-              "type": "integer",
-              "example": 10
-            }
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "description": "Number of contacts to skip for pagination.",
-            "schema": {
-              "type": "integer",
-              "example": 0
-            }
-          },
-          {
-            "name": "isFavourite",
-            "in": "query",
-            "required": false,
-            "description": "Filter contacts by favourite status.",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved the list of contacts.",
+            "description": "A list of contacts.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/contact"
+                    "$ref": "#/components/schemas/Contact"
                   }
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized request, Bearer token is required."
-          },
-          "500": {
-            "description": "Internal server error."
+            "$ref": "#/components/responses/unAuthorizedError"
           }
-        }
-      },
-      "post": {
-        "tags": [
-          "Contacts"
-        ],
-        "summary": "Create a new contact",
-        "operationId": "createContact",
-        "description": "Create a new contact for the authenticated user.",
+        },
         "security": [
           {
             "BearerAuth": []
           }
+        ]
+      },
+      "post": {
+        "summary": "Add a new contact",
+        "tags": [
+          "Contacts"
         ],
         "requestBody": {
+          "description": "Contact data to add.",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "example": "Josh Crowly"
-                  },
-                  "phoneNumber": {
-                    "type": "string",
-                    "example": "+381234567890"
-                  },
-                  "email": {
-                    "type": "string",
-                    "example": "example@mail.com"
-                  },
-                  "isFavourite": {
-                    "type": "boolean",
-                    "example": false
-                  },
-                  "contactType": {
-                    "type": "string",
-                    "enum": [
-                      "work",
-                      "home",
-                      "personal"
-                    ],
-                    "example": "work"
-                  }
-                }
+                "$ref": "#/components/schemas/Contact"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Contact created successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/contact"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request (invalid data)."
+            "description": "Contact created successfully."
           },
           "401": {
-            "description": "Unauthorized request, Bearer token is required."
-          },
-          "500": {
-            "description": "Internal server error."
+            "$ref": "#/components/responses/unAuthorizedError"
           }
-        }
-      }
-    },
-    "/contacts/{contactId}": {
-      "get": {
-        "tags": [
-          "Contacts"
-        ],
-        "summary": "Get contact by ID",
-        "operationId": "getContactById",
-        "description": "Retrieve detailed information about a contact using its unique identifier.",
+        },
         "security": [
           {
             "BearerAuth": []
           }
+        ]
+      }
+    },
+    "/contacts/{contactId}": {
+      "get": {
+        "summary": "Get a contact by ID",
+        "tags": [
+          "Contacts"
         ],
         "parameters": [
           {
             "name": "contactId",
             "in": "path",
             "required": true,
-            "description": "The unique identifier of the contact to retrieve.",
+            "description": "ID of the contact to retrieve.",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved the contact details.",
+            "description": "Contact details.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/contact"
+                  "$ref": "#/components/schemas/Contact"
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized request, Bearer token is required."
+            "$ref": "#/components/responses/unAuthorizedError"
           },
           "404": {
-            "description": "Contact not found.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Contact not found."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error."
+            "description": "Contact not found"
           }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Contacts"
-        ],
-        "summary": "Update a contact",
-        "operationId": "updateContact",
-        "description": "Update the details of a specific contact by its unique ID.",
+        },
         "security": [
           {
             "BearerAuth": []
           }
+        ]
+      },
+      "patch": {
+        "summary": "Update a contact by ID",
+        "tags": [
+          "Contacts"
         ],
         "parameters": [
           {
             "name": "contactId",
             "in": "path",
             "required": true,
-            "description": "The unique identifier of the contact to update.",
+            "description": "ID of the contact to update.",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           }
         ],
         "requestBody": {
+          "description": "Fields to update in the contact.",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "example": "Josh Crowly"
-                  },
-                  "phoneNumber": {
-                    "type": "string",
-                    "example": "+381234567890"
-                  },
-                  "email": {
-                    "type": "string",
-                    "example": "example@mail.com"
-                  },
-                  "isFavourite": {
-                    "type": "boolean",
-                    "example": true
-                  },
-                  "contactType": {
-                    "type": "string",
-                    "enum": [
-                      "work",
-                      "home",
-                      "personal"
-                    ],
-                    "example": "work"
-                  }
-                }
+                "$ref": "#/components/schemas/Contact"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Contact updated successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/contact"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request (invalid data)."
+            "description": "Contact updated successfully."
           },
           "401": {
-            "description": "Unauthorized request, Bearer token is required."
+            "$ref": "#/components/responses/unAuthorizedError"
           },
           "404": {
-            "description": "Contact not found."
-          },
-          "500": {
-            "description": "Internal server error."
+            "description": "Contact not found"
           }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Contacts"
-        ],
-        "summary": "Delete a contact",
-        "operationId": "deleteContact",
-        "description": "Remove a specific contact by its unique ID.",
+        },
         "security": [
           {
             "BearerAuth": []
           }
+        ]
+      },
+      "delete": {
+        "summary": "Delete a contact by ID",
+        "tags": [
+          "Contacts"
         ],
         "parameters": [
           {
             "name": "contactId",
             "in": "path",
             "required": true,
-            "description": "The unique identifier of the contact to delete.",
+            "description": "ID of the contact to delete.",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           }
         ],
@@ -337,15 +191,17 @@
             "description": "Contact deleted successfully."
           },
           "401": {
-            "description": "Unauthorized request, Bearer token is required."
+            "$ref": "#/components/responses/unAuthorizedError"
           },
           "404": {
-            "description": "Contact not found."
-          },
-          "500": {
-            "description": "Internal server error."
+            "description": "Contact not found"
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     }
   },
@@ -356,77 +212,45 @@
         "scheme": "bearer"
       }
     },
+    "responses": {
+      "unAuthorizedError": {
+        "description": "Unauthorized. The user is not authenticated.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Unauthorized"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "schemas": {
       "Contact": {
-        "$ref": "#/components/schemas/contact"
-      },
-      "contact": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "63f1bff8a9e4621d2e4e9134"
-          },
           "name": {
             "type": "string",
-            "description": "The name of the contact",
-            "example": "Josh Crowly"
-          },
-          "phoneNumber": {
-            "type": "string",
-            "description": "The phone number of the contact",
-            "example": "+381234567890"
+            "description": "Name of the contact."
           },
           "email": {
             "type": "string",
-            "description": "The email address of the contact",
-            "example": "example@mail.com"
+            "description": "Email address of the contact."
           },
-          "isFavourite": {
-            "type": "boolean",
-            "description": "Marks if the contact is favourite",
-            "example": true
-          },
-          "contactType": {
+          "phone": {
             "type": "string",
-            "enum": [
-              "work",
-              "home",
-              "personal"
-            ],
-            "description": "Type of the contact",
-            "example": "work"
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The ID of the user who owns the contact",
-            "example": "63f1bff8a9e4621d2e4e9134"
-          },
-          "photo": {
-            "type": "string",
-            "description": "URL to the contact’s photo",
-            "example": "https://example.com/photo.png"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "When the contact was created",
-            "example": "2023-12-19T18:42:00Z"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "When the contact was last updated",
-            "example": "2023-12-19T18:43:00Z"
+            "description": "Phone number of the contact."
           }
         },
         "required": [
           "name",
-          "phoneNumber",
-          "contactType",
-          "userId"
+          "email",
+          "phone"
         ]
       }
     }

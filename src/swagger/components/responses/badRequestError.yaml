@@ -1,0 +1,9 @@
+description: Bad Request – Invalid request format or missing required fields.
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: 'Bad request.'

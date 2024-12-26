@@ -1,0 +1,9 @@
+description: Contact not found, invalid contact ID.
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: 'Not Found'

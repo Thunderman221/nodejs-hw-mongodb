@@ -1,46 +1,40 @@
-tags:
-  - Contacts
-summary: Create a new contact
-operationId: createContact
-description: Create a new contact for the authenticated user.
-security:
-  - BearerAuth: []
-requestBody:
-  required: true
-  content:
-    application/json:
-      schema:
-        type: object
-        properties:
-          name:
-            type: string
-            example: Josh Crowly
-          phoneNumber:
-            type: string
-            example: '+381234567890'
-          email:
-            type: string
-            example: example@mail.com
-          isFavourite:
-            type: boolean
-            example: false
-          contactType:
-            type: string
-            enum:
-              - work
-              - home
-              - personal
-            example: work
-responses:
-  '201':
-    description: Contact created successfully.
-    content:
-      application/json:
-        schema:
-          $ref: '../../components/schemas/contact.yaml'
-  '400':
-    description: Bad request (invalid data).
-  '401':
-    description: Unauthorized request, Bearer token is required.
-  '500':
-    description: Internal server error.
+paths:
+  /contacts:
+    post:
+      summary: Add a new contact
+      tags:
+        - Contacts
+      requestBody:
+        description: Contact data to add.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../src/swagger/components/schemas/contact.yaml'
+      responses:
+        '201':
+          description: Contact created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '../src/swagger/components/schemas/contact.yaml'
+              example:
+                id: '63f1bff8a9e4621d2e4e9134'
+                name: 'Josh Crowly'
+                phoneNumber: '+381234567890'
+                email: 'example@mail.com'
+                isFavourite: true
+                contactType: 'work'
+                userId: '63f1bff8a9e4621d2e4e9134'
+                photo: 'https://example.com/photo.png'
+                createdAt: '2023-12-19T18:42:00Z'
+                updatedAt: '2023-12-19T18:43:00Z'
+        '400':
+          description: Bad Request – Invalid contact data.
+          $ref: '../src/swagger/components/responses/badRequestError.yaml'
+        '401':
+          description: Unauthorized – Authentication is required or invalid.
+          $ref: '../src/swagger/components/responses/unAuthorizedError.yaml'
+        '404':
+          description: Not Found – The resource could not be found.
+          $ref: '../src/swagger/components/responses/notFoundError.yaml'

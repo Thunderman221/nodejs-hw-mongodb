@@ -1,9 +1,5 @@
 type: object
 properties:
-  id:
-    type: string
-    format: uuid
-    example: '63f1bff8a9e4621d2e4e9134'
   name:
     type: string
     description: 'The name of the contact'
@@ -48,4 +44,3 @@ required:
   - name
   - phoneNumber
   - contactType
-  - userId
