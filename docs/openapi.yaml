@@ -118,6 +118,80 @@ paths:
           $ref: '#/components/responses/unAuthorizedError'
         '500':
           description: Internal server error.
+    post:
+      summary: Add a new contact
+      tags:
+        - Contacts
+      operationId: addContact
+      description: Create a new contact for the authenticated user.
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Contact data to create a new contact. The photo should be sent as a file.
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the contact.
+                  example: John Doe
+                phoneNumber:
+                  type: string
+                  description: Phone number of the contact.
+                  example: '+123456789'
+                email:
+                  type: string
+                  description: Email address of the contact.
+                  example: john.doe@example.com
+                isFavourite:
+                  type: boolean
+                  description: Indicates if the contact is a favourite.
+                  example: true
+                contactType:
+                  type: string
+                  enum: [work, home, personal]
+                  description: Type of the contact.
+                  example: work
+                photo:
+                  type: string
+                  format: binary
+                  description: Photo of the contact.
+      responses:
+        '201':
+          description: Contact created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Contact created successfully!
+                  data:
+                    $ref: '#/components/schemas/Contact'
+        '400':
+          description: Invalid request payload.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid request payload.
+        '401':
+          $ref: '#/components/responses/unAuthorizedError'
+        '500':
+          description: Internal server error.
   /contacts/{contactId}:
     get:
       summary: Get a contact by ID
@@ -232,16 +306,14 @@ components:
           type: boolean
           description: Marks if the contact is a favourite.
           example: true
-        createdAt:
+        contactType:
           type: string
-          format: date-time
-          description: Contact creation timestamp.
-          example: '2023-12-27T12:34:56Z'
-        updatedAt:
+          description: Type of the contact.
+          example: work
+        photo:
           type: string
-          format: date-time
-          description: Contact update timestamp.
-          example: '2023-12-27T13:00:00Z'
+          format: binary
+          description: Photo of the contact.
       required:
         - name
         - email
