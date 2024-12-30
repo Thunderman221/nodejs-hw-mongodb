@@ -340,25 +340,72 @@
           }
         ],
         "requestBody": {
-          "description": "Fields to update in the contact.",
+          "description": "Fields to update in the contact, including the option to upload a new photo.",
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/Contact"
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Updated name of the contact.",
+                    "example": "Josh Crowly"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Updated phone number of the contact.",
+                    "example": "+381234567890"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Updated email of the contact.",
+                    "example": "example@mail.com"
+                  },
+                  "isFavourite": {
+                    "type": "boolean",
+                    "description": "Updated favourite status of the contact.",
+                    "example": true
+                  },
+                  "contactType": {
+                    "type": "string",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ],
+                    "description": "Updated type of the contact.",
+                    "example": "work"
+                  },
+                  "photo": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Updated photo of the contact."
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Contact updated successfully."
+            "description": "Contact updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid data)."
           },
           "401": {
             "$ref": "#/components/responses/unAuthorizedError"
           },
           "404": {
-            "description": "Contact not found"
+            "$ref": "#/components/responses/notFoundError"
           },
           "500": {
             "description": "Internal server error."
@@ -431,12 +478,38 @@
             }
           }
         }
+      },
+      "notFoundError": {
+        "description": "Contact not found, invalid contact ID.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Not Found"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "schemas": {
       "Contact": {
         "type": "object",
         "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Unique identifier of the contact.",
+            "example": "64c8a37d7fc733a399ec9a12"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Unique identifier of the user who owns the contact.",
+            "example": "64c8a37d7fc733a399ec9b34"
+          },
           "name": {
             "type": "string",
             "description": "Name of the contact.",
@@ -447,7 +520,7 @@
             "description": "Email address of the contact.",
             "example": "john.doe@example.com"
           },
-          "phone": {
+          "phoneNumber": {
             "type": "string",
             "description": "Phone number of the contact.",
             "example": "+123456789"
@@ -469,9 +542,11 @@
           }
         },
         "required": [
+          "userId",
           "name",
           "email",
-          "phone"
+          "phoneNumber",
+          "contactType"
         ]
       }
     }
