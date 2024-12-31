@@ -1,6 +1,7 @@
 import createHttpError from 'http-errors';
 import Contact from '../db/models/contacts.js';
 import { buildFilters } from '../utils/buildFilters.js';
+import { validateObjectId } from '../utils/validateObjectId.js';
 
 export const getAllContacts = async (
   page = 1,
@@ -34,6 +35,8 @@ export const getAllContacts = async (
 
 export const getContactById = async (contactId, userId) => {
   try {
+    validateObjectId(contactId, 'Invalid contact ID format');
+
     const contact = await Contact.findOne({ _id: contactId, userId });
     if (!contact) {
       throw createHttpError(404, 'Contact not found or not owned by user');
@@ -41,9 +44,6 @@ export const getContactById = async (contactId, userId) => {
     return contact;
   } catch (error) {
     console.error('Error retrieving contact by ID:', error);
-    if (error.name === 'CastError') {
-      throw createHttpError(400, 'Invalid contact ID format');
-    }
     throw createHttpError(500, 'Error retrieving contact by ID');
   }
 };
@@ -81,6 +81,8 @@ export const createContact = async ({
 
 export const updateContact = async (contactId, updatedData, userId) => {
   try {
+    validateObjectId(contactId, 'Invalid contact ID format');
+
     const updatedContact = await Contact.findOneAndUpdate(
       { _id: contactId, userId },
       updatedData,
@@ -100,15 +102,14 @@ export const updateContact = async (contactId, updatedData, userId) => {
     if (error.name === 'ValidationError') {
       throw createHttpError(400, 'Validation error during contact update');
     }
-    if (error.name === 'CastError') {
-      throw createHttpError(400, 'Invalid contact ID format');
-    }
     throw createHttpError(500, 'Error updating contact');
   }
 };
 
 export const deleteContact = async (contactId, userId) => {
   try {
+    validateObjectId(contactId, 'Invalid contact ID format');
+
     const contact = await Contact.findOneAndDelete({ _id: contactId, userId });
 
     if (!contact) {
@@ -118,9 +119,6 @@ export const deleteContact = async (contactId, userId) => {
     return contact;
   } catch (error) {
     console.error('Error deleting contact:', error);
-    if (error.name === 'CastError') {
-      throw createHttpError(400, 'Invalid contact ID format');
-    }
     throw createHttpError(500, 'Error deleting contact');
   }
 };
