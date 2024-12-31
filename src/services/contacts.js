@@ -1,7 +1,6 @@
+import createHttpError from 'http-errors';
 import Contact from '../db/models/contacts.js';
 import { buildFilters } from '../utils/buildFilters.js';
-
-// import mongoose from 'mongoose';
 
 export const getAllContacts = async (
   page = 1,
@@ -12,11 +11,10 @@ export const getAllContacts = async (
   userId,
 ) => {
   try {
-    const skip = page > 0 ? (page - 1) * perPage : 0;
+    const skip = (page - 1) * perPage;
     const sortDirection = sortOrder === 'desc' ? -1 : 1;
 
     const filterConditions = buildFilters(filters);
-
     filterConditions.userId = userId;
 
     const [contacts, totalItems] = await Promise.all([
@@ -29,8 +27,8 @@ export const getAllContacts = async (
 
     return { contacts, totalItems };
   } catch (error) {
-    console.error(error);
-    throw new Error('Error retrieving contacts');
+    console.error('Error retrieving contacts:', error);
+    throw createHttpError(500, 'Error retrieving contacts');
   }
 };
 
@@ -38,12 +36,15 @@ export const getContactById = async (contactId, userId) => {
   try {
     const contact = await Contact.findOne({ _id: contactId, userId });
     if (!contact) {
-      throw new Error('Contact not found or not owned by user');
+      throw createHttpError(404, 'Contact not found or not owned by user');
     }
     return contact;
   } catch (error) {
     console.error('Error retrieving contact by ID:', error);
-    throw new Error('Error retrieving contact by ID');
+    if (error.name === 'CastError') {
+      throw createHttpError(400, 'Invalid contact ID format');
+    }
+    throw createHttpError(500, 'Error retrieving contact by ID');
   }
 };
 
@@ -70,8 +71,11 @@ export const createContact = async ({
     await newContact.save();
     return newContact;
   } catch (error) {
-    console.error(error);
-    throw new Error('Error creating contact');
+    console.error('Error creating contact:', error);
+    if (error.name === 'ValidationError') {
+      throw createHttpError(400, 'Validation error during contact creation');
+    }
+    throw createHttpError(500, 'Error creating contact');
   }
 };
 
@@ -87,13 +91,19 @@ export const updateContact = async (contactId, updatedData, userId) => {
     );
 
     if (!updatedContact) {
-      throw new Error('Contact not found or not owned by user');
+      throw createHttpError(404, 'Contact not found or not owned by user');
     }
 
     return updatedContact;
   } catch (error) {
     console.error('Error updating contact:', error);
-    throw new Error('Error updating contact');
+    if (error.name === 'ValidationError') {
+      throw createHttpError(400, 'Validation error during contact update');
+    }
+    if (error.name === 'CastError') {
+      throw createHttpError(400, 'Invalid contact ID format');
+    }
+    throw createHttpError(500, 'Error updating contact');
   }
 };
 
@@ -102,12 +112,15 @@ export const deleteContact = async (contactId, userId) => {
     const contact = await Contact.findOneAndDelete({ _id: contactId, userId });
 
     if (!contact) {
-      throw new Error('Contact not found or not owned by user');
+      throw createHttpError(404, 'Contact not found or not owned by user');
     }
 
     return contact;
   } catch (error) {
     console.error('Error deleting contact:', error);
-    throw new Error('Error deleting contact');
+    if (error.name === 'CastError') {
+      throw createHttpError(400, 'Invalid contact ID format');
+    }
+    throw createHttpError(500, 'Error deleting contact');
   }
 };

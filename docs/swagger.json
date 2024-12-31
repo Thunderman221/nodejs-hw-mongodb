@@ -85,15 +85,6 @@
               "default": "asc",
               "example": "asc"
             }
-          },
-          {
-            "name": "isFavourite",
-            "in": "query",
-            "required": false,
-            "description": "Filter contacts by favourite status.",
-            "schema": {
-              "type": "boolean"
-            }
           }
         ],
         "responses": {
@@ -200,11 +191,6 @@
                     "type": "string",
                     "description": "Email address of the contact.",
                     "example": "john.doe@example.com"
-                  },
-                  "isFavourite": {
-                    "type": "boolean",
-                    "description": "Indicates if the contact is a favourite.",
-                    "example": true
                   },
                   "contactType": {
                     "type": "string",
