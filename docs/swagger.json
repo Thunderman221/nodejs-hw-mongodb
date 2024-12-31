@@ -544,7 +544,7 @@
         "required": [
           "userId",
           "name",
-          "email",
+          "_id",
           "phoneNumber",
           "contactType"
         ]

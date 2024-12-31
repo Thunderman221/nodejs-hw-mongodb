@@ -104,9 +104,16 @@ export const createContactController = async (req, res, next) => {
 
 export const updateContactController = async (req, res, next) => {
   try {
+    const contact = await getContactById(contactId, req.user._id);
+
     const { contactId } = req.params;
 
     const { error } = updateContactSchema.validate(req.body);
+
+    if (!contact) {
+      throw createHttpError(404, 'Contact not found');
+    }
+
     if (error) {
       throw createHttpError(400, error.details[0].message);
     }

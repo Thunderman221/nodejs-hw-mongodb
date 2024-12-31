@@ -23,7 +23,7 @@ export const registerUserController = async (req, res, next) => {
     const user = await createUser({ name, email, password });
 
     res.status(201).json({
-      status: 'success',
+      status: 201,
       message: 'Successfully registered a user!',
       data: {
         id: user._id,
@@ -53,7 +53,7 @@ export const loginController = async (req, res, next) => {
         maxAge: 24 * 60 * 60 * 1000,
       })
       .json({
-        status: 'success',
+        status: 200,
         message: 'Successfully logged in an user!',
         data: { accessToken },
       });
@@ -81,7 +81,7 @@ export const refreshController = async (req, res, next) => {
         maxAge: 24 * 60 * 60 * 1000,
       })
       .json({
-        status: 'success',
+        status: 200,
         message: 'Successfully refreshed a session!',
         data: { accessToken },
       });
