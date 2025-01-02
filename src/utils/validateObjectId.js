@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import createHttpError from 'http-errors';
 
-export const validateObjectId = (id, message = 'Invalid ID format') => {
+export const validateObjectId = (id, errorMessage = 'Invalid ID format') => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw createHttpError(400, message);
+    throw createHttpError(404, errorMessage);
   }
 };

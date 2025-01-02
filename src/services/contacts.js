@@ -43,6 +43,9 @@ export const getContactById = async (contactId, userId) => {
     }
     return contact;
   } catch (error) {
+    if (createHttpError.isHttpError(error)) {
+      throw error;
+    }
     console.error('Error retrieving contact by ID:', error);
     throw createHttpError(500, 'Error retrieving contact by ID');
   }
@@ -71,6 +74,9 @@ export const createContact = async ({
     await newContact.save();
     return newContact;
   } catch (error) {
+    if (createHttpError.isHttpError(error)) {
+      throw error;
+    }
     console.error('Error creating contact:', error);
     if (error.name === 'ValidationError') {
       throw createHttpError(400, 'Validation error during contact creation');
@@ -98,6 +104,9 @@ export const updateContact = async (contactId, updatedData, userId) => {
 
     return updatedContact;
   } catch (error) {
+    if (createHttpError.isHttpError(error)) {
+      throw error;
+    }
     console.error('Error updating contact:', error);
     if (error.name === 'ValidationError') {
       throw createHttpError(400, 'Validation error during contact update');
@@ -118,6 +127,9 @@ export const deleteContact = async (contactId, userId) => {
 
     return contact;
   } catch (error) {
+    if (createHttpError.isHttpError(error)) {
+      throw error;
+    }
     console.error('Error deleting contact:', error);
     throw createHttpError(500, 'Error deleting contact');
   }
