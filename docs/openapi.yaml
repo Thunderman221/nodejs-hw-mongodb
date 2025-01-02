@@ -150,6 +150,9 @@ paths:
                   type: string
                   format: binary
                   description: Photo of the contact.
+                isFavourite:
+                  type: boolean
+                  example: true
       responses:
         '201':
           description: Contact created successfully.

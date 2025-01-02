@@ -206,6 +206,10 @@
                     "type": "string",
                     "format": "binary",
                     "description": "Photo of the contact."
+                  },
+                  "isFavourite": {
+                    "type": "boolean",
+                    "example": true
                   }
                 }
               }
